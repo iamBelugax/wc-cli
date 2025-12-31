@@ -1,5 +1,5 @@
 run:
-	@go run main.go
+	@go run main.go $(ARGS)
 
 test:
 	@go test -v ./...

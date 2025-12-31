@@ -6,7 +6,6 @@ import (
 	"io"
 	"log"
 	"os"
-	"path/filepath"
 	"unicode"
 	"unicode/utf8"
 )
@@ -17,25 +16,35 @@ const (
 
 func main() {
 	log.SetFlags(0)
-
-	wd, err := os.Getwd()
-	if err != nil {
-		log.Fatalln("failed to read current working dir :", err)
+	if len(os.Args) < 2 {
+		log.Fatalln("error: must provide at least one filename")
 	}
 
-	file, err := os.Open(filepath.Join(wd, "words.txt"))
+	total := 0
+	args := os.Args[1:]
+	for _, filename := range args {
+		wordCount := CountWordsInFile(filename)
+		total += wordCount
+		fmt.Println(wordCount, filename)
+	}
+
+	if len(args) > 1 {
+		fmt.Println(total, "total")
+	}
+}
+
+func CountWordsInFile(filename string) int {
+	file, err := os.Open(filename)
 	if err != nil {
 		log.Fatalln("failed to open file :", err)
 	}
-
 	defer func() {
 		if err := file.Close(); err != nil {
 			log.Fatalln("failed to close file :", err)
 		}
 	}()
 
-	wordCount := CountWordsUsingBufioScanner(file)
-	fmt.Println("Word Count =>", wordCount)
+	return CountWordsUsingBufioScanner(file)
 }
 
 // CountWordsUsingBufioScanner counts words using a buffered scanner.
