@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"io"
 	"log"
@@ -22,7 +23,7 @@ func main() {
 		log.Fatalln("failed to read current working dir :", err)
 	}
 
-	file, err := os.Open(filepath.Join(wd, "words.txt"))
+	file, err := os.Open(filepath.Join(wd, "utf-8.txt"))
 	if err != nil {
 		log.Fatalln("failed to open file :", err)
 	}
@@ -37,6 +38,26 @@ func main() {
 }
 
 func CountWords(reader io.Reader) int {
+	var wordCount int
+	var isInsideWord bool
+	bufReader := bufio.NewReaderSize(reader, bufferSize)
+
+	for {
+		r, _, err := bufReader.ReadRune()
+		if err != nil {
+			break
+		}
+
+		if !unicode.IsSpace(r) && !isInsideWord {
+			wordCount++
+		}
+		isInsideWord = !unicode.IsSpace(r)
+	}
+
+	return wordCount
+}
+
+func CustomCountWords(reader io.Reader) int {
 	var wordCount int
 	var isInsideWord bool
 
