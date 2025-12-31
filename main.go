@@ -1,11 +1,11 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"log"
 	"os"
 	"path/filepath"
-	"strings"
 )
 
 func main() {
@@ -24,5 +24,5 @@ func main() {
 }
 
 func CountWords(data []byte) int {
-	return len(strings.Fields(string(data)))
+	return len(bytes.Fields(data))
 }
