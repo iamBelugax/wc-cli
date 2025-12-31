@@ -8,6 +8,25 @@ func TestCountWords(t *testing.T) {
 
 	res := CountWords([]byte(input))
 	if res != wants {
+		t.Logf("expected %d, got %d", wants, res)
+		t.Fail()
+	}
+
+	input = ""
+	wants = 0
+
+	res = CountWords([]byte(input))
+	if res != wants {
+		t.Logf("expected %d, got %d", wants, res)
+		t.Fail()
+	}
+
+	input = " "
+	wants = 0
+
+	res = CountWords([]byte(input))
+	if res != wants {
+		t.Logf("expected %d, got %d", wants, res)
 		t.Fail()
 	}
 }

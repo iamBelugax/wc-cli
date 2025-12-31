@@ -23,6 +23,10 @@ func main() {
 }
 
 func CountWords(data []byte) int {
+	if len(data) == 0 {
+		return 0
+	}
+
 	var wordCount int
 	for _, char := range data {
 		if char == ' ' {
@@ -30,6 +34,5 @@ func CountWords(data []byte) int {
 		}
 	}
 
-	wordCount++
-	return wordCount
+	return wordCount + 1
 }
