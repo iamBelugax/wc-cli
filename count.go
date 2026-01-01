@@ -121,3 +121,12 @@ func CountLines(reader io.Reader) int {
 
 	return linesCount
 }
+
+func CountBytes(reader io.Reader) int {
+	bytesCount, err := io.Copy(io.Discard, reader)
+	if err != nil {
+		return 0
+	}
+
+	return int(bytesCount)
+}
