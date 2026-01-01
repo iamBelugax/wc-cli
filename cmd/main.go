@@ -45,17 +45,17 @@ func main() {
 			counts, err := counter.CountFile(filename)
 			if err != nil {
 				mu.Lock()
-				hasErrorOccurred = true
-				mu.Unlock()
+				defer mu.Unlock()
 
+				hasErrorOccurred = true
 				fmt.Fprintln(os.Stderr, "wc:", err)
 				return
 			}
 
 			mu.Lock()
-			totals.Add(counts)
-			mu.Unlock()
+			defer mu.Unlock()
 
+			totals.Add(counts)
 			counts.Print(tw, opts, filename)
 		}()
 	}
