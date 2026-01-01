@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/iamBelugax/wc-cli/counter"
+	counter "github.com/iamBelugax/wc-cli"
 	"github.com/iamBelugax/wc-cli/display"
 )
 
