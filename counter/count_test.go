@@ -305,6 +305,57 @@ func TestCountBytes(t *testing.T) {
 	}
 }
 
+func TestCountAll(t *testing.T) {
+	testCases := []struct {
+		name  string
+		input string
+		wants counter.Counts
+	}{
+		{
+			name:  "Empty Input",
+			input: "",
+			wants: counter.Counts{Words: 0, Lines: 0, Bytes: 0},
+		},
+		{
+			name:  "5 Spaces",
+			input: "     ",
+			wants: counter.Counts{Words: 0, Lines: 0, Bytes: 5},
+		},
+		{
+			name:  "5 Spaces and Single New Line",
+			input: "     \n",
+			wants: counter.Counts{Words: 0, Lines: 1, Bytes: 6},
+		},
+		{
+			name:  "Five Words With New Lines",
+			input: "one two three \nfour five \n\n\n",
+			wants: counter.Counts{Words: 5, Lines: 4, Bytes: 28},
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			reader := strings.NewReader(tc.input)
+			res := counter.CountAll(reader)
+
+			if res.Bytes != tc.wants.Bytes {
+				t.Logf("expected %d bytes, got %d bytes", tc.wants, res)
+				t.Fail()
+			}
+
+			if res.Lines != tc.wants.Lines {
+				t.Logf("expected %d lines, got %d lines", tc.wants, res)
+				t.Fail()
+			}
+
+			if res.Words != tc.wants.Words {
+				t.Logf("expected %d words, got %d words", tc.wants, res)
+				t.Fail()
+			}
+		})
+	}
+}
+
 func BenchmarkCountWords(b *testing.B) {
 	data := strings.Repeat(testText, 10000)
 	for b.Loop() {
@@ -342,5 +393,13 @@ func BenchmarkCountBytes(b *testing.B) {
 	for b.Loop() {
 		reader := strings.NewReader(data)
 		_ = counter.CountBytes(reader)
+	}
+}
+
+func BenchmarkCountAll(b *testing.B) {
+	data := strings.Repeat(testText, 10000)
+	for b.Loop() {
+		reader := strings.NewReader(data)
+		_ = counter.CountAll(reader)
 	}
 }

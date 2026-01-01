@@ -13,13 +13,13 @@ const (
 	bufSize     = 4096
 )
 
-type counts struct {
+type Counts struct {
 	Words int
 	Lines int
 	Bytes int
 }
 
-func CountAll(r io.ReadSeeker) counts {
+func CountAll(r io.ReadSeeker) Counts {
 	words := CountWords(r)
 
 	r.Seek(offsetStart, io.SeekStart)
@@ -28,17 +28,17 @@ func CountAll(r io.ReadSeeker) counts {
 	r.Seek(offsetStart, io.SeekStart)
 	bytes := CountBytes(r)
 
-	return counts{
+	return Counts{
 		Words: words,
 		Lines: lines,
 		Bytes: bytes,
 	}
 }
 
-func CountFile(path string) (counts, error) {
+func CountFile(path string) (Counts, error) {
 	f, err := os.Open(path)
 	if err != nil {
-		return counts{}, err
+		return Counts{}, err
 	}
 	defer f.Close()
 
