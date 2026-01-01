@@ -1,7 +1,6 @@
 package counter_test
 
 import (
-	"bytes"
 	"strings"
 	"testing"
 
@@ -235,45 +234,55 @@ func TestCountsAdd(t *testing.T) {
 		}
 	}
 }
-
 func TestCountsPrint(t *testing.T) {
 	testCases := []struct {
 		name   string
 		counts counter.Counts
+		opts   counter.DisplayOpts
 		suffix []string
 		wants  string
 	}{
 		{
-			"NoSuffix",
-			counter.Counts{Words: 1, Lines: 2, Bytes: 3},
-			nil,
-			"2 1 3\n",
+			name:   "AllEnabledNoSuffix",
+			counts: counter.Counts{Words: 1, Lines: 2, Bytes: 3},
+			opts:   counter.DisplayOpts{ShowWords: true, ShowLines: true, ShowBytes: true},
+			wants:  "1 2 3\n",
 		},
 		{
-			"WithFilename",
-			counter.Counts{Words: 1, Lines: 2, Bytes: 3},
-			[]string{"file.txt"},
-			"2 1 3 file.txt\n",
+			name:   "AllEnabledWithFilename",
+			counts: counter.Counts{Words: 1, Lines: 2, Bytes: 3},
+			opts:   counter.DisplayOpts{ShowWords: true, ShowLines: true, ShowBytes: true},
+			suffix: []string{"file.txt"},
+			wants:  "1 2 3 file.txt\n",
 		},
 		{
-			"ZeroValues",
-			counter.Counts{},
-			[]string{"empty"},
-			"0 0 0 empty\n",
+			name:   "WordsOnly",
+			counts: counter.Counts{Words: 5, Lines: 10, Bytes: 20},
+			opts:   counter.DisplayOpts{ShowWords: true},
+			wants:  "5\n",
+		},
+		{
+			name:   "LinesAndBytes",
+			counts: counter.Counts{Words: 5, Lines: 10, Bytes: 20},
+			opts:   counter.DisplayOpts{ShowLines: true, ShowBytes: true},
+			wants:  "10 20\n",
+		},
+		{
+			name:   "ZeroValuesWithSuffix",
+			counts: counter.Counts{},
+			opts:   counter.DisplayOpts{ShowWords: true, ShowLines: true, ShowBytes: true},
+			suffix: []string{"empty"},
+			wants:  "0 0 0 empty\n",
 		},
 	}
 
-	for _, testCase := range testCases {
-		t.Run(testCase.name, func(t *testing.T) {
-			var buffer bytes.Buffer
-			testCase.counts.Print(&buffer, testCase.suffix...)
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			var buf strings.Builder
+			tc.counts.Print(&buf, tc.opts, tc.suffix...)
 
-			if buffer.String() != testCase.wants {
-				t.Fatalf(
-					"expected %q, got %q",
-					testCase.wants,
-					buffer.String(),
-				)
+			if buf.String() != tc.wants {
+				t.Fatalf("expected %q, got %q", tc.wants, buf.String())
 			}
 		})
 	}
