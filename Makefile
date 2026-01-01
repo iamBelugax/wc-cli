@@ -5,7 +5,7 @@ BINARY := counter
 
 build:
 	@mkdir -p $(DIST)
-	@go build -o $(DIST)/$(BINARY) .
+	@go build -o $(DIST)/$(BINARY) ./cmd/main.go
 
 run: build
 	@./$(DIST)/$(BINARY) $(ARGS)
