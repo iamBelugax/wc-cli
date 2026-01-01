@@ -35,7 +35,6 @@ func main() {
 
 	if len(filenames) == 0 {
 		wordCount := CountWordsUsingBufioScanner(os.Stdin)
-		fmt.Println()
 		fmt.Println(wordCount)
 		os.Exit(0)
 	}
