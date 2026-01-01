@@ -63,13 +63,15 @@ func (c *Counts) Print(w io.Writer, opts DisplayOpts, suffixes ...string) {
 		result = append(result, strconv.Itoa(c.Bytes))
 	}
 
-	fmt.Fprint(w, strings.Join(result, " "))
+	line := strings.Join(result, "\t") + "\t"
+	fmt.Fprint(w, line)
 
-	for _, suffix := range suffixes {
-		fmt.Fprint(w, " ", suffix)
+	suffixStr := strings.Join(suffixes, " ")
+	if suffixStr != "" {
+		fmt.Fprint(w, " ", suffixStr)
 	}
 
-	fmt.Fprint(w, "\n")
+	fmt.Fprintln(w)
 }
 
 func (c *Counts) Add(other Counts) {

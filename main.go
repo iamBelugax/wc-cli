@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"text/tabwriter"
 
 	"github.com/iamBelugax/wc-cli/counter"
 )
@@ -22,6 +23,8 @@ func main() {
 	filenames := flag.Args()
 	var hasErrorOccurred bool
 
+	tw := tabwriter.NewWriter(os.Stdout, 0, 8, 1, ' ', tabwriter.AlignRight)
+
 	for _, filename := range filenames {
 		counts, err := counter.CountFile(filename)
 		if err != nil {
@@ -31,18 +34,21 @@ func main() {
 		}
 
 		total.Add(counts)
-		counts.Print(os.Stdout, displayOpts, filename)
+		counts.Print(tw, displayOpts, filename)
 	}
 
 	if len(filenames) == 0 {
 		counts := counter.CountAll(os.Stdin)
-		counts.Print(os.Stdout, displayOpts)
+		counts.Print(tw, displayOpts)
+		tw.Flush()
 		os.Exit(0)
 	}
 
 	if len(filenames) > 1 {
-		total.Print(os.Stdout, displayOpts, "total")
+		total.Print(tw, displayOpts, "total")
 	}
+
+	tw.Flush()
 
 	if hasErrorOccurred {
 		os.Exit(1)

@@ -246,33 +246,33 @@ func TestCountsPrint(t *testing.T) {
 			name:   "AllEnabledNoSuffix",
 			counts: counter.Counts{Words: 1, Lines: 2, Bytes: 3},
 			opts:   counter.DisplayOpts{ShowWords: true, ShowLines: true, ShowBytes: true},
-			wants:  "1 2 3\n",
+			wants:  "1\t2\t3\t\n",
 		},
 		{
 			name:   "AllEnabledWithFilename",
 			counts: counter.Counts{Words: 1, Lines: 2, Bytes: 3},
 			opts:   counter.DisplayOpts{ShowWords: true, ShowLines: true, ShowBytes: true},
 			suffix: []string{"file.txt"},
-			wants:  "1 2 3 file.txt\n",
+			wants:  "1\t2\t3\t file.txt\n",
 		},
 		{
 			name:   "WordsOnly",
 			counts: counter.Counts{Words: 5, Lines: 10, Bytes: 20},
 			opts:   counter.DisplayOpts{ShowWords: true},
-			wants:  "5\n",
+			wants:  "5\t\n",
 		},
 		{
 			name:   "LinesAndBytes",
 			counts: counter.Counts{Words: 5, Lines: 10, Bytes: 20},
 			opts:   counter.DisplayOpts{ShowLines: true, ShowBytes: true},
-			wants:  "10 20\n",
+			wants:  "10\t20\t\n",
 		},
 		{
 			name:   "ZeroValuesWithSuffix",
 			counts: counter.Counts{},
 			opts:   counter.DisplayOpts{ShowWords: true, ShowLines: true, ShowBytes: true},
 			suffix: []string{"empty"},
-			wants:  "0 0 0 empty\n",
+			wants:  "0\t0\t0\t empty\n",
 		},
 	}
 
