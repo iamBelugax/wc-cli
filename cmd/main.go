@@ -12,6 +12,11 @@ import (
 	"github.com/iamBelugax/wc-cli/display"
 )
 
+type Result struct {
+	filename string
+	counts   counter.Counts
+}
+
 func main() {
 	showBytes := flag.Bool("c", false, "Used to toggle whether to show bytes")
 	showWords := flag.Bool("w", false, "Used to toggle whether to show word count")
@@ -31,12 +36,12 @@ func main() {
 		os.Exit(0)
 	}
 
-	var mu sync.Mutex
 	var wg sync.WaitGroup
 	wg.Add(len(filenames))
 
 	var totals counter.Counts
 	var hasErrorOccurred bool
+	resultCh := make(chan Result, len(filenames))
 
 	for _, filename := range filenames {
 		go func() {
@@ -44,23 +49,22 @@ func main() {
 
 			counts, err := counter.CountFile(filename)
 			if err != nil {
-				mu.Lock()
-				defer mu.Unlock()
-
 				hasErrorOccurred = true
 				fmt.Fprintln(os.Stderr, "wc:", err)
 				return
 			}
 
-			mu.Lock()
-			defer mu.Unlock()
-
-			totals.Add(counts)
-			counts.Print(tw, opts, filename)
+			resultCh <- Result{counts: counts, filename: filename}
 		}()
 	}
 
 	wg.Wait()
+	close(resultCh)
+
+	for res := range resultCh {
+		totals.Add(res.counts)
+		res.counts.Print(tw, opts, res.filename)
+	}
 
 	totals.Print(tw, opts, "total")
 	tw.Flush()
