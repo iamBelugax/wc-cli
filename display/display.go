@@ -1,28 +1,36 @@
 package display
 
 type Options struct {
-	ShowWords bool
-	ShowLines bool
-	ShowBytes bool
+	showWords bool
+	showLines bool
+	showBytes bool
 }
 
-func (d *Options) ShouldShowWords() bool {
-	if !d.ShowBytes && !d.ShowLines && !d.ShowWords {
-		return true
+func NewOptions(lines, words, bytes bool) Options {
+	return Options{
+		showWords: words,
+		showLines: lines,
+		showBytes: bytes,
 	}
-	return d.ShowWords
 }
 
-func (d *Options) ShouldShowLines() bool {
-	if !d.ShowBytes && !d.ShowLines && !d.ShowWords {
+func (d *Options) ShowWords() bool {
+	if !d.showBytes && !d.showLines && !d.showWords {
 		return true
 	}
-	return d.ShowLines
+	return d.showWords
 }
 
-func (d *Options) ShouldShowBytes() bool {
-	if !d.ShowBytes && !d.ShowLines && !d.ShowWords {
+func (d *Options) ShowLines() bool {
+	if !d.showBytes && !d.showLines && !d.showWords {
 		return true
 	}
-	return d.ShowBytes
+	return d.showLines
+}
+
+func (d *Options) ShowBytes() bool {
+	if !d.showBytes && !d.showLines && !d.showWords {
+		return true
+	}
+	return d.showBytes
 }

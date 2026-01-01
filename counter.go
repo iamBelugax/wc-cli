@@ -26,15 +26,15 @@ type Counts struct {
 func (c *Counts) Print(w io.Writer, opts display.Options, suffixes ...string) {
 	result := make([]string, 0)
 
-	if opts.ShouldShowWords() {
+	if opts.ShowWords() {
 		result = append(result, strconv.Itoa(c.Words))
 	}
 
-	if opts.ShouldShowLines() {
+	if opts.ShowLines() {
 		result = append(result, strconv.Itoa(c.Lines))
 	}
 
-	if opts.ShouldShowBytes() {
+	if opts.ShowBytes() {
 		result = append(result, strconv.Itoa(c.Bytes))
 	}
 

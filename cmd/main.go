@@ -12,18 +12,18 @@ import (
 )
 
 func main() {
-	log.SetFlags(0)
-
-	var opts display.Options
-	flag.BoolVar(&opts.ShowBytes, "c", false, "Used to toggle whether to show bytes")
-	flag.BoolVar(&opts.ShowWords, "w", false, "Used to toggle whether to show word count")
-	flag.BoolVar(&opts.ShowLines, "l", false, "Used to toggle whether to show lines count")
+	showBytes := flag.Bool("c", false, "Used to toggle whether to show bytes")
+	showWords := flag.Bool("w", false, "Used to toggle whether to show word count")
+	showLines := flag.Bool("l", false, "Used to toggle whether to show lines count")
 	flag.Parse()
 
-	var total counter.Counts
+	opts := display.NewOptions(*showLines, *showWords, *showBytes)
+	log.SetFlags(0)
+
 	filenames := flag.Args()
 	var hasErrorOccurred bool
 
+	var total counter.Counts
 	tw := tabwriter.NewWriter(os.Stdout, 0, 8, 1, ' ', tabwriter.AlignRight)
 
 	for _, filename := range filenames {
