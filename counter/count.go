@@ -28,6 +28,12 @@ func (c Counts) Print(w io.Writer, suffix ...string) {
 	fmt.Fprint(w, "\n")
 }
 
+func (c *Counts) Add(other Counts) {
+	c.Bytes += other.Bytes
+	c.Lines += other.Lines
+	c.Words += other.Words
+}
+
 func CountAll(r io.ReadSeeker) Counts {
 	words := CountWords(r)
 
